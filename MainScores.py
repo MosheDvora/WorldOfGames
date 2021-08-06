@@ -14,4 +14,4 @@ def index():
         return render_template('error.html', error=value)
 
 
-app.run(host="127.0.0.1", port=5001)
+app.run(host="0.0.0.0", port=5001)

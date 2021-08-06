@@ -1,0 +1,7 @@
+version: '3'
+services:
+  web:
+    build: .
+    image: moshedvora/wog
+    ports:
+     - "4000:5001"
