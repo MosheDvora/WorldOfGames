@@ -1,0 +1,38 @@
+node {
+    stage('Checkout') { 
+        deleteDir()
+        bat ' git clone https://github.com/MosheDvora/WorldOfGames.git '
+         
+}
+    
+    stage('Build') {
+        bat ' docker build -t wog-jenkins  "./WorldOfGames"   '
+        }
+
+    stage('Run') {
+        bat' docker rm -f wog-jenkins-con '   
+        bat 'docker run -dp 8777:5001 --name wog-jenkins-con --mount type=bind,source=/c:/tmp,target=/WorldOfGames/score/  wog-jenkins'
+
+    }
+    stage('Test') {
+      try{
+         bat  '"./WorldOfGames/e2e.py" '}
+         
+      catch(err){
+           echo "something failed"
+           currentBuild.result = 'FAILURE'
+           bat 'exit 1'
+        }
+      finally {
+        bat  'docker rm -f wog-jenkins-con '
+     
+      }
+      }
+    
+
+    stage('Finalize') {
+         bat  'docker rm -f wog-jenkins-con '
+         bat  'docker tag wog-jenkins moshedvora/wog-jenkins '
+         bat  'docker push moshedvora/wog-jenkins' 
+    }
+}
