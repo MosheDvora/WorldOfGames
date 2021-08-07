@@ -1,4 +1,5 @@
 flask
+selenium
 currency_converter
 requests
 num2words
